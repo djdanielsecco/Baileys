@@ -1,5 +1,5 @@
 import { Boom } from '@hapi/boom'
-import makeWASocket, { AnyMessageContent, delay, DisconnectReason, fetchLatestBaileysVersion, isJidBroadcast, makeCacheableSignalKeyStore, makeInMemoryStore, MessageRetryMap, useMultiFileAuthState } from '../src'
+import makeWASocket, { AnyMessageContent, Browsers, delay, DisconnectReason, fetchLatestBaileysVersion, isJidBroadcast, makeCacheableSignalKeyStore, makeInMemoryStore, MessageRetryMap, useMultiFileAuthState } from '../src'
 import MAIN_LOGGER from '../src/Utils/logger'
 
 const logger = MAIN_LOGGER.child({ })
@@ -30,13 +30,14 @@ const startSock = async() => {
 
 	const sock = makeWASocket({
 		version,
-		logger,
+		// logger,
 		printQRInTerminal: true,
 		auth: {
 			creds: state.creds,
 			/** caching makes the store faster to send/recv messages */
 			keys: makeCacheableSignalKeyStore(state.keys, logger),
 		},
+		browser: Browsers.ubuntu('Desktop'),
 		msgRetryCounterMap,
 		generateHighQualityLinkPreview: true,
 		// ignore all broadcast messages -- to receive the same
