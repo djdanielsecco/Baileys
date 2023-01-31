@@ -162,7 +162,7 @@ DbConnections.mongo().then(async (db: any) => {
 					if (connection === 'open') {
 						if (isOn) {
 							try {
-								final = await MyModel.find({ bitSendText: false, bitAtivo: true,bitVerify: false,bitNotificacao: false }).limit(126).skip(900)
+								final = await MyModel.find({ bitSendText: false, bitAtivo: true,bitVerify: false,bitNotificacao: false }).limit(126).skip(2000)
 								console.log('final: ', final?.length);
 								await waitingTimer(3000)
 								console.log("Vai começar");
@@ -193,11 +193,11 @@ DbConnections.mongo().then(async (db: any) => {
 											const status = await sock.fetchStatus(result?.jid).catch(()=>{}) ?? false
 									const profile = await sock!.getBusinessProfile(result?.jid).catch(()=>{}) ?? false
 									const pic = await sock!.profilePictureUrl(result?.jid).catch(() => {}) ?? false
-									console.log("status", status)
-									console.log("profile", profile)
+									console.log("status", !!status)
+									console.log("profile", !!profile)
 									console.log('pic: ', !!pic)
-											if (validRex) {
-												// await MyModel.findOneAndUpdate({ Celular: x.Celular }, { bitVerify: true })
+											if (validRex && !(!pic && !status && !profile)) {
+												await MyModel.findOneAndUpdate({ Celular: x.Celular }, { bitVerify: true })
 												let prod = () => resolver(() => {
 
 													return {
@@ -260,8 +260,8 @@ DbConnections.mongo().then(async (db: any) => {
 										// responder[`a${sent.Celular}a`].log()
 									}
 									// await chat.sendMessage(sent.men);
-									// await MyModel.findOneAndUpdate({ Celular: sent.Celular }, { bitSendText: true })
-									// await sendMessageWTyping({ text: RandonMessage() }, sent.jid)
+									await MyModel.findOneAndUpdate({ Celular: sent.Celular }, { bitSendText: true })
+									await sendMessageWTyping({ text: RandonMessage() }, sent.jid)
 									console.log(y, "/", arr.length);
 									await waitingTimer(200)
 									if (cc.includes(y / r)) {
