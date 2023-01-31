@@ -190,8 +190,10 @@ DbConnections.mongo().then(async (db: any) => {
 											let jid = result?.jid
 											let validRex = rex.test(jid)
 											console.log(`${jid}    >>>>>>>>isValid`, validRex);
-											const status = await sock!.fetchStatus(jid) || []
-											const profile = await sock!.getBusinessProfile(jid) || []
+											const status = await sock!.fetchStatus(jid).catch(e=>console.log("errsssssss",e)) || []
+											const profile = await sock!.getBusinessProfile(jid).catch(e=>{
+												console.log("errpppppp",e)
+											}) || []
                                        
 											console.log("status", JSON.stringify(profile, undefined, 2))
 											console.log("status", JSON.stringify(status, undefined, 2))
