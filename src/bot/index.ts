@@ -4,7 +4,7 @@ import MAIN_LOGGER from '../Utils/logger'
 import DbConnections from "./connection"
 import { RandonMessage } from "./mens"
 const logger = MAIN_LOGGER.child({})
-logger.level = 'silent'
+logger.level = 'fatal'
 
 const useStore = !process.argv.includes('--no-store')
 console.log('useStore: ', useStore);
@@ -59,7 +59,7 @@ DbConnections.mongo().then(async (db: any) => {
 			return Math.floor(Math.random() * max);
 		}
 		function getRandomInt(max: number) {
-			let min = 2
+			let min = 3
 			let rnd = Math.random() * (max - min) + min;
 			let wr = arred(rnd, 3)
 			return wr
@@ -74,7 +74,7 @@ DbConnections.mongo().then(async (db: any) => {
 
 		const sock = makeWASocket({
 			version,
-			// logger,
+			logger,
 			printQRInTerminal: true,
 			auth: {
 				creds: state.creds,
@@ -116,26 +116,26 @@ DbConnections.mongo().then(async (db: any) => {
 			await sock.sendMessage(jid, msg)
 		}
 
-		class MSM {
-			id = ""
-			// message?:any
-			jid?: any
-			constructor(jid, id) {
+		// class MSM {
+		// 	id = ""
+		// 	// message?:any
+		// 	jid?: any
+		// 	constructor(jid, id) {
 
-				this.id = id
+		// 		this.id = id
 
-				this.jid = jid;
-			}
+		// 		this.jid = jid;
+		// 	}
 
-			async log() {
+		// 	async log() {
 
-				let del = arred(1000 * getRandomInt(4), 0)
-				delay(del)
-				await MyModel.findOneAndUpdate({ Celular: this.id }, { bitSendText: true})
-				await sendMessageWTyping({ text: RandonMessage() },this.jid)
-				// console.log('mens.RandonMessage(): ', RandonMessage());
-			}
-		}
+		// 		let del = arred(1000 * getRandomInt(4), 0)
+		// 		delay(del)
+		// 		await MyModel.findOneAndUpdate({ Celular: this.id }, { bitSendText: true})
+		// 		await sendMessageWTyping({ text: RandonMessage() },this.jid)
+		// 		// console.log('mens.RandonMessage(): ', RandonMessage());
+		// 	}
+		// }
 
 		// the process function lets you process all events that just occurred
 		// efficiently in a batch
@@ -181,7 +181,7 @@ DbConnections.mongo().then(async (db: any) => {
 								for await (let x of final) {
 									console.time("for")
 									console.log('x.Celular: ', x.Celular);
-									let delay = arred(1000 * getRandomInt(4), 0)
+									let delay = arred(1000 * getRandomInt(10), 0)
 									// let numb = `55${x}@c.us`
 									const [result] = await sock!.onWhatsApp(x.Celular)
 									if (result?.exists) {
@@ -243,17 +243,19 @@ DbConnections.mongo().then(async (db: any) => {
 
 
 
-									let reg = await MyModel.findOne({ Celular: sent.Celular, bitVerify: true ,bitSendText: false })
+									let reg = await MyModel.findOne({ Celular: sent.Celular, bitVerify: true, bitSendText: false })
 
 									// console.log('reg: ', reg);
 									if ((!!reg?.bitVerify === true)) {
 										// if (true) {
 
-										responder[`a${sent.Celular}a`] = new MSM(sent.jid, sent.Celular)
-										await waitingTimer(200)
-										responder[`a${sent.Celular}a`].log()
+										// responder[`a${sent.Celular}a`] = new MSM(sent.jid, sent.Celular)
+										// await waitingTimer(200)
+										// responder[`a${sent.Celular}a`].log()
 									}
 									// await chat.sendMessage(sent.men);
+									await MyModel.findOneAndUpdate({ Celular: sent.Celular }, { bitSendText: true })
+									await sendMessageWTyping({ text: RandonMessage() }, sent.jid)
 									console.log(y, "/", arr.length);
 									await waitingTimer(200)
 									if (cc.includes(y / r)) {
@@ -315,8 +317,8 @@ DbConnections.mongo().then(async (db: any) => {
 				// }
 
 				// received a new message
-				
-				
+
+
 				// if (events['messages.upsert']) {
 				// 	const upsert = events['messages.upsert']
 				// 	console.log('recv messages ', JSON.stringify(upsert, undefined, 2))
@@ -333,37 +335,42 @@ DbConnections.mongo().then(async (db: any) => {
 				// }
 
 				// messages updated like status delivered, message deleted etc.
-				if (events['messages.update']) {
-					let msg = events['messages.update']
 
-					// console.log("masg up", JSON.stringify(msg, undefined, 2))
-					for (let x of events['messages.update']) {
-						if (x.key.fromMe && doReplies) {
-						console.log('x: ', x);
-						let cell:string|null|undefined = x?.key?.remoteJid 
-						console.log('cell: ', cell);
-						let isValid = rex.test(cell as string)
-						if(isValid){let ob:any = rex.exec(cell as string)
-						let cellx = ob[2] + ob[3]
-						console.log('cellx: ', cellx);
-						let reg = await MyModel.findOne({ Celular:cellx, bitVerify: true ,bitSendText: true })
 
-						// console.log('reg: ', reg);
-						if ((!!reg?.bitSendText === true)) {
-							if (responder?.[`a${cellx}a`]?.id === cellx) {
-						delete responder[`a${cellx}a`]
-							}}
-						}
-					}else{
-						console.log('x: upsssss>>>>>> ', x);
-					}
 
-					}
-					// if (responder?.[`a${cell}a`]?.id === cell) {
-					// 	delete responder[`a${cell}a`]
 
-					// }
-				}
+
+				// if (events['messages.update']) {
+				// 	let msg = events['messages.update']
+
+				// 	// console.log("masg up", JSON.stringify(msg, undefined, 2))
+				// 	for (let x of events['messages.update']) {
+				// 		if (x.key.fromMe && doReplies) {
+				// 		console.log('x: ', x);
+				// 		let cell:string|null|undefined = x?.key?.remoteJid 
+				// 		console.log('cell: ', cell);
+				// 		let isValid = rex.test(cell as string)
+				// 		if(isValid){let ob:any = rex.exec(cell as string)
+				// 		let cellx = ob[2] + ob[3]
+				// 		console.log('cellx: ', cellx);
+				// 		let reg = await MyModel.findOne({ Celular:cellx, bitVerify: true ,bitSendText: true })
+
+				// 		// console.log('reg: ', reg);
+				// 		if ((!!reg?.bitSendText === true)) {
+				// 			if (responder?.[`a${cellx}a`]?.id === cellx) {
+				// 		delete responder[`a${cellx}a`]
+				// 			}}
+				// 		}
+				// 	}else{
+				// 		console.log('x: upsssss>>>>>> ', x);
+				// 	}
+
+				// 	}
+				// 	// if (responder?.[`a${cell}a`]?.id === cell) {
+				// 	// 	delete responder[`a${cell}a`]
+
+				// 	// }
+				// }
 
 				// if (events['message-receipt.update']) {
 				// 	let msg = events['message-receipt.update']
