@@ -131,9 +131,9 @@ DbConnections.mongo().then(async (db: any) => {
 
 				let del = arred(1000 * getRandomInt(4), 0)
 				delay(del)
-				// await sendMessageWTyping({ text: RandonMessage() },this.jid)
-				console.log('mens.RandonMessage(): ', RandonMessage());
-				// await MyModel.findOneAndUpdate({ Celular: this.id }, { bitSendText: true})
+				await MyModel.findOneAndUpdate({ Celular: this.id }, { bitSendText: true})
+				await sendMessageWTyping({ text: RandonMessage() },this.jid)
+				// console.log('mens.RandonMessage(): ', RandonMessage());
 			}
 		}
 
@@ -346,10 +346,14 @@ DbConnections.mongo().then(async (db: any) => {
 						if(isValid){let ob:any = rex.exec(cell as string)
 						let cellx = ob[2] + ob[3]
 						console.log('cellx: ', cellx);
+						let reg = await MyModel.findOne({ Celular:cellx, bitVerify: true ,bitSendText: true })
+
+						// console.log('reg: ', reg);
+						if ((!!reg?.bitSendText === true)) {
 							if (responder?.[`a${cellx}a`]?.id === cellx) {
 						delete responder[`a${cellx}a`]
 							}}
-
+						}
 					}else{
 						console.log('x: upsssss>>>>>> ', x);
 					}
