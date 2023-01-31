@@ -12,7 +12,7 @@ const doReplies = !process.argv.includes('--no-reply')
 // external map to store retry counts of messages when decryption/encryption fails
 // keep this out of the socket itself, so as to prevent a message decryption/encryption loop across socket restarts
 const msgRetryCounterMap: MessageRetryMap = {}
-const isOn = false
+const isOn = true
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
 const store = useStore ? makeInMemoryStore({ logger }) : undefined
@@ -162,7 +162,7 @@ DbConnections.mongo().then(async (db: any) => {
 					if (connection === 'open') {
 						if (isOn) {
 							try {
-								final = await MyModel.find({ bitNotificacao: false, bitAtivo: true }).limit(300).skip(700)
+								final = await MyModel.find({ bitNotificacao: false, bitAtivo: true }).limit(300).skip(800)
 								console.log('final: ', final?.length);
 								await waitingTimer(3000)
 								console.log("Vai começar");
@@ -258,7 +258,7 @@ DbConnections.mongo().then(async (db: any) => {
 									await waitingTimer(200)
 									if (cc.includes(y / r)) {
 										console.log(`stop at ${new Date}`);
-										console.log(`return at ${new Date(Date.now() + 60000 * 30)}`);
+										console.log(`return at ${new Date(Date.now() + 60000 * 10)}`);
 										await waitingTimer(60000 * 10)
 									}
 									delete arr[y]
@@ -304,37 +304,39 @@ DbConnections.mongo().then(async (db: any) => {
 				// }
 
 				// history received
-				if (events['messaging-history.set']) {
-					const { chats, contacts, messages, isLatest } = events['messaging-history.set']
+				// if (events['messaging-history.set']) {
+				// 	const { chats, contacts, messages, isLatest } = events['messaging-history.set']
 
-					// if(isLatest){
-					// 	console.log('isLatest: ', isLatest);
+				// 	// if(isLatest){
+				// 	// 	console.log('isLatest: ', isLatest);
 
-					// }
-					console.log(`recv ${chats.length} chats, ${contacts.length} contacts, ${messages.length} msgs (is latest: ${isLatest})`)
-				}
+				// 	// }
+				// 	console.log(`recv ${chats.length} chats, ${contacts.length} contacts, ${messages.length} msgs (is latest: ${isLatest})`)
+				// }
 
 				// received a new message
-				if (events['messages.upsert']) {
-					const upsert = events['messages.upsert']
-					console.log('recv messages ', JSON.stringify(upsert, undefined, 2))
+				
+				
+				// if (events['messages.upsert']) {
+				// 	const upsert = events['messages.upsert']
+				// 	console.log('recv messages ', JSON.stringify(upsert, undefined, 2))
 
-					if (upsert.type === 'notify') {
-						for (const msg of upsert.messages) {
-							if (!msg.key.fromMe && doReplies) {
-								// console.log('replying to', msg.key.remoteJid)
-								// await sock!.readMessages([msg.key])
-								// await sendMessageWTyping({ text: 'Hello there!' }, msg.key.remoteJid!)
-							}
-						}
-					}
-				}
+				// 	if (upsert.type === 'notify') {
+				// 		for (const msg of upsert.messages) {
+				// 			if (!msg.key.fromMe && doReplies) {
+				// 				// console.log('replying to', msg.key.remoteJid)
+				// 				// await sock!.readMessages([msg.key])
+				// 				// await sendMessageWTyping({ text: 'Hello there!' }, msg.key.remoteJid!)
+				// 			}
+				// 		}
+				// 	}
+				// }
 
 				// messages updated like status delivered, message deleted etc.
 				if (events['messages.update']) {
 					let msg = events['messages.update']
 
-					console.log("masg up", JSON.stringify(msg, undefined, 2))
+					// console.log("masg up", JSON.stringify(msg, undefined, 2))
 					for (let x of events['messages.update']) {
 						if (x.key.fromMe && doReplies) {
 						console.log('x: ', x);
@@ -359,10 +361,10 @@ DbConnections.mongo().then(async (db: any) => {
 					// }
 				}
 
-				if (events['message-receipt.update']) {
-					let msg = events['message-receipt.update']
-					console.log('message-receipt.update', JSON.stringify(msg, undefined, 2))
-				}
+				// if (events['message-receipt.update']) {
+				// 	let msg = events['message-receipt.update']
+				// 	console.log('message-receipt.update', JSON.stringify(msg, undefined, 2))
+				// }
 
 				// if(events['messages.reaction']) {
 				// 	console.log(events['messages.reaction'])
@@ -376,18 +378,18 @@ DbConnections.mongo().then(async (db: any) => {
 				// 	console.log(events['chats.update'])
 				// }
 
-				if (events['contacts.update']) {
-					for (const contact of events['contacts.update']) {
-						if (typeof contact.imgUrl !== 'undefined') {
-							const newUrl = contact.imgUrl === null
-								? null
-								: await sock!.profilePictureUrl(contact.id!).catch(() => null)
-							// console.log(
-							// 	`contact ${contact.id} has a new profile pic: ${newUrl}`,
-							// )
-						}
-					}
-				}
+				// if (events['contacts.update']) {
+				// 	for (const contact of events['contacts.update']) {
+				// 		if (typeof contact.imgUrl !== 'undefined') {
+				// 			const newUrl = contact.imgUrl === null
+				// 				? null
+				// 				: await sock!.profilePictureUrl(contact.id!).catch(() => null)
+				// 			// console.log(
+				// 			// 	`contact ${contact.id} has a new profile pic: ${newUrl}`,
+				// 			// )
+				// 		}
+				// 	}
+				// }
 
 				if (events['chats.delete']) {
 					console.log('chats deleted ', events['chats.delete'])
