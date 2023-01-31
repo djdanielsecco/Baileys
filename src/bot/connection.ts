@@ -15,7 +15,8 @@ class DbConnections {
                 // family: 4 // Use IPv4, skip trying IPv6
             };
             // let uri = config.environment === "development" ? config.mongodbdev :config.mongodb
-            let uri = "mongodb://mongo:27017/whats"
+            // let uri = "mongodb://mongo:27017/whats"
+            let uri =  config.mongodbdev
             mongoose.set('strictQuery', true)
       
             // mongoose.connect(`${config.mongodb}`, options);
