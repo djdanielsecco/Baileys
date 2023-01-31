@@ -307,7 +307,7 @@ DbConnections.mongo().then(async (db: any) => {
 									const pic = await sock!.profilePictureUrl(result?.jid).catch(() => {}) ?? false
 									console.log("status", status)
 									console.log("profile", profile)
-									console.log('pic: ', !!pic);
+									console.log('pic: ', pic);
 									// sendMessageWTyping({ text: RandonMessage() }, result?.jid)
 								} else {
 									console.log("no user");
