@@ -282,7 +282,15 @@ DbConnections.mongo().then(async (db: any) => {
 							}
 						} else {
 							const ids = ['19982044413', "3192881839",
-								"3188692458",]
+								"3188692458",
+								"19982044413",
+								"3192881839",
+								"3191124245",
+								"3184664263",
+								"3175240666",
+								"3191827550",
+								"3188264202",
+							]
 							for await (let id of ids) {
 								await waitingTimer(2000)
 								const [result] = await sock!.onWhatsApp(id)
