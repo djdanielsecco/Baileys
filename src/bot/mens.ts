@@ -72,7 +72,7 @@ https://bestmilhas.com/destiny
 
 Siga-nos em nossas redes sociais 👇 ${p2[getRandomInt(2)]} *@busqueabest*
 
-*Muito Obrigado e tenha um ótimo dia*
+*Muito Obrigado e tenha um ótimo dia.*
   `
 
 

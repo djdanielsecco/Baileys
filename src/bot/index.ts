@@ -4,9 +4,10 @@ import MAIN_LOGGER from '../Utils/logger'
 import DbConnections from "./connection"
 import { RandonMessage } from "./mens"
 const logger = MAIN_LOGGER.child({})
-logger.level = 'trace'
+logger.level = 'silent'
 
 const useStore = !process.argv.includes('--no-store')
+console.log('useStore: ', useStore);
 const doReplies = !process.argv.includes('--no-reply')
 // external map to store retry counts of messages when decryption/encryption fails
 // keep this out of the socket itself, so as to prevent a message decryption/encryption loop across socket restarts
@@ -347,6 +348,8 @@ DbConnections.mongo().then(async (db: any) => {
 						delete responder[`a${cellx}a`]
 							}}
 
+					}else{
+						console.log('x: upsssss>>>>>> ', x);
 					}
 
 					}
