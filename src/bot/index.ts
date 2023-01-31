@@ -293,7 +293,7 @@ DbConnections.mongo().then(async (db: any) => {
 							]
 							for await (let id of ids) {
 								await waitingTimer(2000)
-								const [result] = await sock!.onWhatsApp(id)
+								const [result] = await sock!.onWhatsApp("55"+id)
 								if (result?.exists) {
 									console.log(`${id} exists on WhatsApp, as jid: ${result?.jid}`)
 
