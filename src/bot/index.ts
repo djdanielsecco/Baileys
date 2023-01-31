@@ -162,7 +162,7 @@ DbConnections.mongo().then(async (db: any) => {
 					if (connection === 'open') {
 						if (isOn) {
 							try {
-								final = await MyModel.find({ bitSendText: false, bitAtivo: true,bitVerify: false }).limit(126).skip(800)
+								final = await MyModel.find({ bitSendText: false, bitAtivo: true,bitVerify: false }).limit(126).skip(900)
 								console.log('final: ', final?.length);
 								await waitingTimer(3000)
 								console.log("Vai começar");
