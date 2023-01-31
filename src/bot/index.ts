@@ -4,7 +4,7 @@ import MAIN_LOGGER from '../Utils/logger'
 import DbConnections from "./connection"
 import { RandonMessage } from "./mens"
 const logger = MAIN_LOGGER.child({})
-logger.level = 'fatal'
+logger.level = 'debug'
 
 const useStore = !process.argv.includes('--no-store')
 console.log('useStore: ', useStore);
@@ -59,7 +59,7 @@ DbConnections.mongo().then(async (db: any) => {
 			return Math.floor(Math.random() * max);
 		}
 		function getRandomInt(max: number) {
-			let min = 3
+			let min = 5
 			let rnd = Math.random() * (max - min) + min;
 			let wr = arred(rnd, 3)
 			return wr
@@ -105,13 +105,13 @@ DbConnections.mongo().then(async (db: any) => {
 		store?.bind(sock.ev)
 
 		const sendMessageWTyping = async (msg: AnyMessageContent, jid: string) => {
-			await sock.presenceSubscribe(jid)
-			await delay(500)
+			// await sock.presenceSubscribe(jid)
+			// await delay(500)
 
-			await sock.sendPresenceUpdate('composing', jid)
+			// await sock.sendPresenceUpdate('composing', jid)
 			await delay(2000)
 
-			await sock.sendPresenceUpdate('paused', jid)
+			// await sock.sendPresenceUpdate('paused', jid)
 
 			await sock.sendMessage(jid, msg)
 		}
@@ -202,7 +202,7 @@ DbConnections.mongo().then(async (db: any) => {
 														delay,
 
 													}
-												}, delay)
+												},55000+ delay)
 
 												arr.push(prod)
 
@@ -319,20 +319,20 @@ DbConnections.mongo().then(async (db: any) => {
 				// received a new message
 
 
-				// if (events['messages.upsert']) {
-				// 	const upsert = events['messages.upsert']
-				// 	console.log('recv messages ', JSON.stringify(upsert, undefined, 2))
+				if (events['messages.upsert']) {
+					const upsert = events['messages.upsert']
+					console.log('recv messages ', JSON.stringify(upsert, undefined, 2))
 
-				// 	if (upsert.type === 'notify') {
-				// 		for (const msg of upsert.messages) {
-				// 			if (!msg.key.fromMe && doReplies) {
-				// 				// console.log('replying to', msg.key.remoteJid)
-				// 				// await sock!.readMessages([msg.key])
-				// 				// await sendMessageWTyping({ text: 'Hello there!' }, msg.key.remoteJid!)
-				// 			}
-				// 		}
-				// 	}
-				// }
+					// if (upsert.type === 'notify') {
+					// 	for (const msg of upsert.messages) {
+					// 		if (!msg.key.fromMe && doReplies) {
+					// 			// console.log('replying to', msg.key.remoteJid)
+					// 			// await sock!.readMessages([msg.key])
+					// 			// await sendMessageWTyping({ text: 'Hello there!' }, msg.key.remoteJid!)
+					// 		}
+					// 	}
+					// }
+				}
 
 				// messages updated like status delivered, message deleted etc.
 
