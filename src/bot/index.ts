@@ -290,6 +290,10 @@ DbConnections.mongo().then(async (db: any) => {
 								"3175240666",
 								"3191827550",
 								"3188264202",
+								"21985240526",
+								"21987219613",
+								"21988590916",
+								"21985472583"
 							]
 							for await (let id of ids) {
 								await waitingTimer(2000)
