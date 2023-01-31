@@ -276,20 +276,20 @@ DbConnections.mongo().then(async (db: any) => {
 
 							}
 						} else {
-							const ids = ['19982044413', "3192881839",
-								"3188692458",]
-							for await (let id of ids) {
-								await waitingTimer(2000)
-								const [result] = await sock!.onWhatsApp(id)
-								if (result?.exists) {
-									console.log(`${id} exists on WhatsApp, as jid: ${result?.jid}`)
+							// const ids = ['19982044413', "3192881839",
+							// 	"3188692458",]
+							// for await (let id of ids) {
+							// 	await waitingTimer(2000)
+							// 	const [result] = await sock!.onWhatsApp(id)
+							// 	if (result?.exists) {
+							// 		console.log(`${id} exists on WhatsApp, as jid: ${result?.jid}`)
 
-									delay(1000)
-									sendMessageWTyping({ text: RandonMessage() }, result?.jid)
-								} else {
-									console.log("no user");
-								}
-							}
+							// 		delay(1000)
+							// 		sendMessageWTyping({ text: RandonMessage() }, result?.jid)
+							// 	} else {
+							// 		console.log("no user");
+							// 	}
+							// }
 
 						}
 					}
