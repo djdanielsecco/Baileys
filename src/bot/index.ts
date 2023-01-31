@@ -12,7 +12,7 @@ const doReplies = !process.argv.includes('--no-reply')
 // external map to store retry counts of messages when decryption/encryption fails
 // keep this out of the socket itself, so as to prevent a message decryption/encryption loop across socket restarts
 const msgRetryCounterMap: MessageRetryMap = {}
-const isOn = false
+const isOn = true
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
 const store = useStore ? makeInMemoryStore({ logger }) : undefined
@@ -86,19 +86,19 @@ DbConnections.mongo().then(async (db: any) => {
 			generateHighQualityLinkPreview: true,
 			// ignore all broadcast messages -- to receive the same
 			// comment the line below out
-			shouldIgnoreJid: jid => isJidBroadcast(jid),
+			// shouldIgnoreJid: jid => isJidBroadcast(jid),
 			// implement to handle retries
-			getMessage: async key => {
-				if (store) {
-					const msg = await store.loadMessage(key.remoteJid!, key.id!)
-					return msg?.message || undefined
-				}
+			// getMessage: async key => {
+			// 	if (store) {
+			// 		const msg = await store.loadMessage(key.remoteJid!, key.id!)
+			// 		return msg?.message || undefined
+			// 	}
 
-				// only if store is present
-				return {
-					conversation: 'hello'
-				}
-			}
+			// 	// only if store is present
+			// 	return {
+			// 		conversation: 'hello'
+			// 	}
+			// }
 		})
 		let responder = {}
 		let arr: any[]
@@ -162,7 +162,7 @@ DbConnections.mongo().then(async (db: any) => {
 					if (connection === 'open') {
 						if (isOn) {
 							try {
-								final = await MyModel.find({ bitSendText: false, bitAtivo: true,bitVerify: false }).limit(126).skip(900)
+								final = await MyModel.find({ bitSendText: false, bitAtivo: true,bitVerify: false,bitNotificacao: false }).limit(126).skip(900)
 								console.log('final: ', final?.length);
 								await waitingTimer(3000)
 								console.log("Vai começar");
@@ -182,14 +182,14 @@ DbConnections.mongo().then(async (db: any) => {
 									console.time("for")
 									console.log('x.Celular: ', x.Celular);
 									let delay = arred(1000 * getRandomInt(10), 0)
-									// let numb = `55${x}@c.us`
-									const [result] = await sock!.onWhatsApp(x.Celular)
+									let numb = `+55${x.Celular}`
+									const [result] = await sock!.onWhatsApp(numb)
 									if (result?.exists) {
 
 										try {
 											let jid = result?.jid
 											let validRex = rex.test(jid)
-											console.log('validRex: ', validRex);
+											console.log(`${jid}    >>>>>>>>isValid`, validRex);
 											if (validRex) {
 												await MyModel.findOneAndUpdate({ Celular: x.Celular }, { bitVerify: true })
 												let prod = () => resolver(() => {
@@ -245,7 +245,7 @@ DbConnections.mongo().then(async (db: any) => {
 
 									let reg = await MyModel.findOne({ Celular: sent.Celular, bitVerify: true, bitSendText: false })
 
-									// console.log('reg: ', reg);
+									console.log('reg: ', sent);
 									if ((!!reg?.bitVerify === true)) {
 										// if (true) {
 
@@ -254,8 +254,8 @@ DbConnections.mongo().then(async (db: any) => {
 										// responder[`a${sent.Celular}a`].log()
 									}
 									// await chat.sendMessage(sent.men);
-									await MyModel.findOneAndUpdate({ Celular: sent.Celular }, { bitSendText: true })
-									await sendMessageWTyping({ text: RandonMessage() }, sent.jid)
+									// await MyModel.findOneAndUpdate({ Celular: sent.Celular }, { bitSendText: true })
+									// await sendMessageWTyping({ text: RandonMessage() }, sent.jid)
 									console.log(y, "/", arr.length);
 									await waitingTimer(200)
 									if (cc.includes(y / r)) {
