@@ -12,7 +12,7 @@ const doReplies = !process.argv.includes('--no-reply')
 // external map to store retry counts of messages when decryption/encryption fails
 // keep this out of the socket itself, so as to prevent a message decryption/encryption loop across socket restarts
 const msgRetryCounterMap: MessageRetryMap = {}
-const isOn = true
+const isOn = false
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
 const store = useStore ? makeInMemoryStore({ logger }) : undefined
@@ -281,20 +281,25 @@ DbConnections.mongo().then(async (db: any) => {
 
 							}
 						} else {
-							// const ids = ['19982044413', "3192881839",
-							// 	"3188692458",]
-							// for await (let id of ids) {
-							// 	await waitingTimer(2000)
-							// 	const [result] = await sock!.onWhatsApp(id)
-							// 	if (result?.exists) {
-							// 		console.log(`${id} exists on WhatsApp, as jid: ${result?.jid}`)
+							const ids = ['19982044413', "3192881839",
+								"3188692458",]
+							for await (let id of ids) {
+								await waitingTimer(2000)
+								const [result] = await sock!.onWhatsApp(id)
+								if (result?.exists) {
+									console.log(`${id} exists on WhatsApp, as jid: ${result?.jid}`)
 
-							// 		delay(1000)
-							// 		sendMessageWTyping({ text: RandonMessage() }, result?.jid)
-							// 	} else {
-							// 		console.log("no user");
-							// 	}
-							// }
+									delay(1000)
+									const status = await sock.fetchStatus(result?.jid).catch(()=>{}) ?? []
+									const profile = await sock!.getBusinessProfile(result?.jid).catch(()=>{}) ?? []
+							   
+									console.log("status", status)
+									console.log("profile", profile)
+									// sendMessageWTyping({ text: RandonMessage() }, result?.jid)
+								} else {
+									console.log("no user");
+								}
+							}
 
 						}
 					}
