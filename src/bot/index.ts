@@ -129,8 +129,8 @@ DbConnections.mongo().then(async (db: any) => {
 
 			async log() {
 
-
-				delay(1000)
+				let del = arred(1000 * getRandomInt(4), 0)
+				delay(del)
 				// await sendMessageWTyping({ text: RandonMessage() },this.jid)
 				console.log('mens.RandonMessage(): ', RandonMessage());
 				// await MyModel.findOneAndUpdate({ Celular: this.id }, { bitSendText: true})
@@ -202,7 +202,7 @@ DbConnections.mongo().then(async (db: any) => {
 														delay,
 
 													}
-												}, 15000 + delay)
+												}, delay)
 
 												arr.push(prod)
 
