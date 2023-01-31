@@ -1,5 +1,5 @@
 import { Boom } from '@hapi/boom'
-import makeWASocket, { AnyMessageContent, Browsers, delay, DisconnectReason, fetchLatestBaileysVersion, isJidBroadcast, makeCacheableSignalKeyStore, makeInMemoryStore, MessageRetryMap, useMultiFileAuthState } from '../'
+import makeWASocket, { AnyMessageContent, Browsers, delay, DisconnectReason, fetchLatestBaileysVersion,Contact, isJidBroadcast, makeCacheableSignalKeyStore, makeInMemoryStore, MessageRetryMap, useMultiFileAuthState } from '../'
 import MAIN_LOGGER from '../Utils/logger'
 import DbConnections from "./connection"
 import { RandonMessage } from "./mens"
@@ -12,7 +12,7 @@ const doReplies = !process.argv.includes('--no-reply')
 // external map to store retry counts of messages when decryption/encryption fails
 // keep this out of the socket itself, so as to prevent a message decryption/encryption loop across socket restarts
 const msgRetryCounterMap: MessageRetryMap = {}
-const isOn = false
+const isOn = true
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
 const store = useStore ? makeInMemoryStore({ logger }) : undefined
@@ -190,13 +190,14 @@ DbConnections.mongo().then(async (db: any) => {
 											let jid = result?.jid
 											let validRex = rex.test(jid)
 											console.log(`${jid}    >>>>>>>>isValid`, validRex);
-											const status = await sock.fetchStatus(jid).catch(()=>{}) ?? []
-											const profile = await sock!.getBusinessProfile(jid).catch(()=>{}) ?? []
-                                       
-											console.log("status", status)
-											console.log("profile", profile)
+											const status = await sock.fetchStatus(result?.jid).catch(()=>{}) ?? false
+									const profile = await sock!.getBusinessProfile(result?.jid).catch(()=>{}) ?? false
+									const pic = await sock!.profilePictureUrl(result?.jid).catch(() => {}) ?? false
+									console.log("status", status)
+									console.log("profile", profile)
+									console.log('pic: ', !!pic)
 											if (validRex) {
-												await MyModel.findOneAndUpdate({ Celular: x.Celular }, { bitVerify: true })
+												// await MyModel.findOneAndUpdate({ Celular: x.Celular }, { bitVerify: true })
 												let prod = () => resolver(() => {
 
 													return {
@@ -302,12 +303,12 @@ DbConnections.mongo().then(async (db: any) => {
 									console.log(`${id} exists on WhatsApp, as jid: ${result?.jid}`)
 
 									delay(1000)
-									const status = await sock.fetchStatus(result?.jid).catch(()=>{}) ?? false
-									const profile = await sock!.getBusinessProfile(result?.jid).catch(()=>{}) ?? false
-									const pic = await sock!.profilePictureUrl(result?.jid).catch(() => {}) ?? false
-									console.log("status", status)
-									console.log("profile", profile)
-									console.log('pic: ', pic);
+									// const status = await sock.fetchStatus(result?.jid).catch(()=>{}) ?? false
+									// const profile = await sock!.getBusinessProfile(result?.jid).catch(()=>{}) ?? false
+									// const pic = await sock!.profilePictureUrl(result?.jid).catch(() => {}) ?? false
+									// console.log("status", status)
+									// console.log("profile", profile)
+									// console.log('pic: ', pic);
 									// sendMessageWTyping({ text: RandonMessage() }, result?.jid)
 								} else {
 									console.log("no user");
