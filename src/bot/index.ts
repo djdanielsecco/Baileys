@@ -81,7 +81,7 @@ DbConnections.mongo().then(async (db: any) => {
 				/** caching makes the store faster to send/recv messages */
 				keys: makeCacheableSignalKeyStore(state.keys, logger),
 			},
-			browser: Browsers.ubuntu('Desktop'),
+			browser: Browsers.ubuntu('Chrome'),
 			msgRetryCounterMap,
 			generateHighQualityLinkPreview: true,
 			// ignore all broadcast messages -- to receive the same
