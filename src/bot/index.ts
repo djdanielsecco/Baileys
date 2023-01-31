@@ -190,11 +190,11 @@ DbConnections.mongo().then(async (db: any) => {
 											let jid = result?.jid
 											let validRex = rex.test(jid)
 											console.log(`${jid}    >>>>>>>>isValid`, validRex);
-											const status = await sock.fetchStatus(jid).catch() ?? []
-											const profile = await sock!.getBusinessProfile(jid).catch() || []
+											const status = await sock.fetchStatus(jid).catch(e=>e) ?? []
+											const profile = await sock!.getBusinessProfile(jid).catch(e=>e) ?? []
                                        
-											console.log("status", JSON.stringify(profile, undefined, 2))
-											console.log("status", JSON.stringify(status, undefined, 2))
+											console.log("status", status)
+											console.log("profile", profile)
 											if (validRex) {
 												await MyModel.findOneAndUpdate({ Celular: x.Celular }, { bitVerify: true })
 												let prod = () => resolver(() => {
