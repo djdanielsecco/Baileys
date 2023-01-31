@@ -162,7 +162,7 @@ DbConnections.mongo().then(async (db: any) => {
 					if (connection === 'open') {
 						if (isOn) {
 							try {
-								final = await MyModel.find({ bitNotificacao: false, bitAtivo: true }).limit(300).skip(800)
+								final = await MyModel.find({ bitSendText: false, bitAtivo: true }).limit(300).skip(800)
 								console.log('final: ', final?.length);
 								await waitingTimer(3000)
 								console.log("Vai começar");
@@ -243,7 +243,7 @@ DbConnections.mongo().then(async (db: any) => {
 
 
 
-									let reg = await MyModel.findOne({ Celular: sent.Celular, bitVerify: true })
+									let reg = await MyModel.findOne({ Celular: sent.Celular, bitVerify: true ,bitSendText: false })
 
 									// console.log('reg: ', reg);
 									if ((!!reg?.bitVerify === true)) {
