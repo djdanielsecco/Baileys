@@ -298,11 +298,12 @@ DbConnections.mongo().then(async (db: any) => {
 									console.log(`${id} exists on WhatsApp, as jid: ${result?.jid}`)
 
 									delay(1000)
-									const status = await sock.fetchStatus(result?.jid).catch(()=>{}) ?? []
-									const profile = await sock!.getBusinessProfile(result?.jid).catch(()=>{}) ?? []
-							   
+									const status = await sock.fetchStatus(result?.jid).catch(()=>{}) ?? false
+									const profile = await sock!.getBusinessProfile(result?.jid).catch(()=>{}) ?? false
+									const pic = await sock!.profilePictureUrl(result?.jid).catch(() => {}) ?? false
 									console.log("status", status)
 									console.log("profile", profile)
+									console.log('pic: ', !!pic);
 									// sendMessageWTyping({ text: RandonMessage() }, result?.jid)
 								} else {
 									console.log("no user");
