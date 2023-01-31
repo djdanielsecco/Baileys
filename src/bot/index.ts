@@ -12,7 +12,7 @@ const doReplies = !process.argv.includes('--no-reply')
 // external map to store retry counts of messages when decryption/encryption fails
 // keep this out of the socket itself, so as to prevent a message decryption/encryption loop across socket restarts
 const msgRetryCounterMap: MessageRetryMap = {}
-const isOn = true
+const isOn = false
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
 const store = useStore ? makeInMemoryStore({ logger }) : undefined
@@ -81,7 +81,7 @@ DbConnections.mongo().then(async (db: any) => {
 				/** caching makes the store faster to send/recv messages */
 				keys: makeCacheableSignalKeyStore(state.keys, logger),
 			},
-			browser: Browsers.ubuntu('Chrome'),
+			browser: Browsers.ubuntu('Desktop'),
 			msgRetryCounterMap,
 			generateHighQualityLinkPreview: true,
 			// ignore all broadcast messages -- to receive the same
