@@ -191,7 +191,7 @@ DbConnections.mongo().then(async (db: any) => {
 											let validRex = rex.test(jid)
 											console.log(`${jid}    >>>>>>>>isValid`, validRex);
 											const status = await sock.fetchStatus(jid)
-                                            console.log("status: " + status)
+											console.log("status", JSON.stringify(status, undefined, 2))
 											if (validRex) {
 												await MyModel.findOneAndUpdate({ Celular: x.Celular }, { bitVerify: true })
 												let prod = () => resolver(() => {
