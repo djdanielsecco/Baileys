@@ -162,7 +162,7 @@ DbConnections.mongo().then(async (db: any) => {
 					if (connection === 'open') {
 						if (isOn) {
 							try {
-								final = await MyModel.find({ bitSendText: false, bitAtivo: true }).limit(126).skip(800)
+								final = await MyModel.find({ bitSendText: false, bitAtivo: true,bitVerify: false }).limit(126).skip(800)
 								console.log('final: ', final?.length);
 								await waitingTimer(3000)
 								console.log("Vai começar");
@@ -321,17 +321,17 @@ DbConnections.mongo().then(async (db: any) => {
 
 				if (events['messages.upsert']) {
 					const upsert = events['messages.upsert']
-					console.log('recv messages ', JSON.stringify(upsert, undefined, 2))
-
-					// if (upsert.type === 'notify') {
-					// 	for (const msg of upsert.messages) {
-					// 		if (!msg.key.fromMe && doReplies) {
-					// 			// console.log('replying to', msg.key.remoteJid)
-					// 			// await sock!.readMessages([msg.key])
-					// 			// await sendMessageWTyping({ text: 'Hello there!' }, msg.key.remoteJid!)
-					// 		}
-					// 	}
-					// }
+					
+					if (upsert.type === 'notify') {
+						for (const msg of upsert.messages) {
+							if (!msg.key.fromMe && doReplies) {
+								console.log('replying to', msg.key.remoteJid)
+								await sock!.readMessages([msg.key])
+								console.log('recv messages ', JSON.stringify(msg.message, undefined, 2))
+								// await sendMessageWTyping({ text: 'Hello there!' }, msg.key.remoteJid!)
+							}
+						}
+					}
 				}
 
 				// messages updated like status delivered, message deleted etc.
