@@ -12,7 +12,7 @@ const doReplies = !process.argv.includes('--no-reply')
 // external map to store retry counts of messages when decryption/encryption fails
 // keep this out of the socket itself, so as to prevent a message decryption/encryption loop across socket restarts
 const msgRetryCounterMap: MessageRetryMap = {}
-const isOn = true
+const isOn = false
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
 const store = useStore ? makeInMemoryStore({ logger }) : undefined
@@ -296,24 +296,24 @@ DbConnections.mongo().then(async (db: any) => {
 								"21988590916",
 								"21985472583"
 							]
-							for await (let id of ids) {
-								await waitingTimer(2000)
-								const [result] = await sock!.onWhatsApp("55"+id)
-								if (result?.exists) {
-									console.log(`${id} exists on WhatsApp, as jid: ${result?.jid}`)
+							// for await (let id of ids) {
+							// 	await waitingTimer(2000)
+							// 	const [result] = await sock!.onWhatsApp("55"+id)
+							// 	if (result?.exists) {
+							// 		console.log(`${id} exists on WhatsApp, as jid: ${result?.jid}`)
 
-									delay(1000)
-									// const status = await sock.fetchStatus(result?.jid).catch(()=>{}) ?? false
-									// const profile = await sock!.getBusinessProfile(result?.jid).catch(()=>{}) ?? false
-									// const pic = await sock!.profilePictureUrl(result?.jid).catch(() => {}) ?? false
-									// console.log("status", status)
-									// console.log("profile", profile)
-									// console.log('pic: ', pic);
-									// sendMessageWTyping({ text: RandonMessage() }, result?.jid)
-								} else {
-									console.log("no user");
-								}
-							}
+							// 		delay(1000)
+							// 		const status = await sock.fetchStatus(result?.jid).catch(()=>{}) ?? false
+							// 		const profile = await sock!.getBusinessProfile(result?.jid).catch(()=>{}) ?? false
+							// 		const pic = await sock!.profilePictureUrl(result?.jid).catch(() => {}) ?? false
+							// 		console.log("status", status)
+							// 		console.log("profile", profile)
+							// 		console.log('pic: ', pic);
+							// 		// sendMessageWTyping({ text: RandonMessage() }, result?.jid)
+							// 	} else {
+							// 		console.log("no user");
+							// 	}
+							// }
 
 						}
 					}
